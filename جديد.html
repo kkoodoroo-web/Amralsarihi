@@ -1,0 +1,355 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AMR Downloader — تحميل فيديوهات بدون علامة مائية بدقة عالية</title>
+<meta name="description" content="حمّل فيديوهات انستجرام وتيك توك وفيسبوك وإكس بدون علامة مائية وبأعلى جودة.">
+<meta name="theme-color" content="#060a14">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='13' fill='%230ea5e9'/%3E%3Cpath d='M16 33l8-18 8 18M19 27h10' stroke='white' stroke-width='3.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#060a14;--bd:rgba(255,255,255,.1);--tx:#e2e8f0;--mu:#64748b;--cy:#22d3ee;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;overflow-x:hidden;background:var(--bg);color:var(--tx);font-family:Tajawal,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+svg.i{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.bg{position:fixed;inset:0;z-index:-1;overflow:hidden}
+.bg i{position:absolute;border-radius:50%;filter:blur(120px);animation:dr 16s ease-in-out infinite}
+.bg i:nth-child(1){width:55vh;height:55vh;top:-20%;right:20%;background:rgba(6,182,212,.15)}
+.bg i:nth-child(2){width:60vh;height:60vh;top:30%;left:-15%;background:rgba(37,99,235,.15);animation-delay:-6s}
+.bg i:nth-child(3){width:45vh;height:45vh;bottom:-10%;right:30%;background:rgba(20,184,166,.1);animation-delay:-11s}
+@keyframes dr{50%{transform:translate(3%,-4%) scale(1.1)}}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px}
+header{position:sticky;top:0;z-index:5;border-bottom:1px solid rgba(255,255,255,.05);background:rgba(6,10,20,.75);backdrop-filter:blur(16px)}
+header .wrap{display:flex;align-items:center;justify-content:space-between;padding-block:12px}
+.brand{display:flex;align-items:center;gap:12px;line-height:1.2}
+.brand b{font-size:16px;color:#fff}.brand b span{color:var(--cy)}
+.brand small{display:block;font-size:11px;color:var(--mu)}
+.pill{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--bd);background:rgba(255,255,255,.03);border-radius:99px;padding:6px 12px;font-size:12px;color:#94a3b8}
+.hero{text-align:center;padding:64px 0 32px}
+.tag{display:inline-flex;gap:8px;border:1px solid rgba(6,182,212,.25);background:rgba(6,182,212,.07);color:#67e8f9;border-radius:99px;padding:6px 16px;font-size:12px;font-weight:500}
+h1{margin:24px 0 0;font-size:clamp(32px,7vw,58px);line-height:1.2;font-weight:800;color:#fff}
+h1 span{background:linear-gradient(270deg,#67e8f9,#38bdf8,#3b82f6);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{max-width:540px;margin:20px auto 0;color:#94a3b8;font-size:17px;line-height:1.7}
+.box{border:1px solid var(--bd);border-radius:28px;padding:24px;background:linear-gradient(#ffffff0f,#ffffff05);box-shadow:0 25px 50px #0006;backdrop-filter:blur(16px)}
+.line{display:flex;gap:12px;flex-wrap:wrap}
+.inp{position:relative;flex:1;min-width:240px}
+.inp input{width:100%;direction:ltr;text-align:left;border:1px solid var(--bd);border-radius:16px;background:#0a1020cc;padding:16px 16px 16px 90px;font-size:14px;outline:0}
+.inp input:focus{border-color:rgba(6,182,212,.55);box-shadow:0 0 0 3px rgba(6,182,212,.18)}
+.paste{position:absolute;left:8px;top:50%;transform:translateY(-50%);display:flex;align-items:center;gap:6px;border:1px solid var(--bd);background:#ffffff0d;border-radius:12px;padding:8px 12px;font-size:12px;color:#cbd5e1}
+.go{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:16px;padding:16px 28px;font-weight:700;font-size:14px;color:#fff;background:linear-gradient(270deg,#22d3ee,#3b82f6);box-shadow:0 10px 25px #06b6d440}
+.go:hover{filter:brightness(1.1)}
+button:disabled{opacity:.45;cursor:not-allowed}
+#info{min-height:24px;margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;font-size:12px}
+.err{color:#fda4af}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}
+.opts label{display:block;margin-bottom:8px;font-size:12px;font-weight:700;color:var(--mu);letter-spacing:.05em}
+.modes{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.modes button{display:flex;flex-direction:column;align-items:center;gap:6px;border:1px solid var(--bd);background:#ffffff05;border-radius:12px;padding:12px 4px;font-size:12px;color:#94a3b8}
+.modes button.on{border-color:rgba(6,182,212,.45);background:rgba(6,182,212,.1);color:#a5f3fc}
+select{width:100%;height:calc(100% - 26px);min-height:46px;border:1px solid var(--bd);background:#0a1020;border-radius:12px;padding:0 14px;font-size:14px}
+.card{margin-top:24px;border:1px solid var(--bd);border-radius:24px;padding:24px;background:#ffffff08}
+.card.ok{border-color:rgba(16,185,129,.25);background:linear-gradient(135deg,rgba(16,185,129,.09),rgba(6,182,212,.03))}
+.card.bad{border-color:rgba(244,63,94,.25);background:rgba(244,63,94,.07)}
+.row{display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap}
+.grow{flex:1;min-width:0}
+.card b{font-size:14px}.card small{display:block;font-size:12px;color:var(--mu);margin-top:2px}
+.card .t{font-size:14px;color:#cbd5e1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:6px}
+.card .u{font-size:12px;color:var(--mu);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;direction:ltr;text-align:right}
+.dl{display:inline-flex;align-items:center;gap:8px;border:0;border-radius:12px;padding:12px 24px;font-size:14px;font-weight:700;color:#fff;text-decoration:none;background:linear-gradient(270deg,#22d3ee,#3b82f6)}
+.dl.warn{background:rgba(245,158,11,.15);color:#fde68a;border:1px solid rgba(245,158,11,.3)}
+.hint{margin:16px 0 0;font-size:11px;line-height:1.7;color:var(--mu)}
+.spin{width:20px;height:20px;border:2px solid #22d3ee55;border-top-color:var(--cy);border-radius:50%;animation:sp .8s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.bar{height:6px;border-radius:9px;background:#ffffff0d;margin-top:16px;overflow:hidden}
+.bar i{display:block;height:100%;width:35%;border-radius:9px;background:linear-gradient(90deg,#22d3ee,#3b82f6);animation:bar 1.4s ease-in-out infinite}
+@keyframes bar{0%{margin-right:0}100%{margin-right:65%}}
+.sm{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--bd);background:#ffffff0d;border-radius:10px;padding:6px 12px;font-size:12px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+.pk{position:relative;aspect-ratio:1;overflow:hidden;border:1px solid var(--bd);border-radius:16px;background:#0f172a;padding:0}
+.pk img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.pk span{position:absolute;bottom:8px;right:8px;background:#0008;border-radius:8px;padding:2px 8px;font-size:11px;color:#fff}
+.more{text-align:center;margin-top:16px}
+.more button{background:0;border:0;color:#94a3b8;font-size:14px}
+h2{margin:0 0 24px;text-align:center;font-size:13px;font-weight:700;letter-spacing:.05em;color:var(--mu)}
+.plat{display:flex;flex-wrap:wrap;justify-content:center;gap:12px}
+.plat div{border:1px solid var(--bd);background:#ffffff08;border-radius:16px;padding:10px 18px;font-size:14px;color:#cbd5e1}
+.b{display:inline-flex;border-radius:99px;padding:3px 12px;font-size:12px;font-weight:500;border:1px solid}
+.b-instagram{color:#f0abfc;border-color:#d946ef40;background:#d946ef14}
+.b-tiktok{color:#e2e8f0;border-color:#94a3b840;background:#94a3b814}
+.b-facebook{color:#93c5fd;border-color:#3b82f640;background:#3b82f614}
+.b-twitter{color:#7dd3fc;border-color:#0ea5e940;background:#0ea5e914}
+.b-youtube{color:#fca5a5;border-color:#ef444440;background:#ef444414}
+.b-other{color:#cbd5e1;border-color:#94a3b840;background:#94a3b814}
+.hist{border:1px solid var(--bd);border-radius:24px;background:#ffffff08;overflow:hidden}
+.hist .h{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--bd);font-size:14px;font-weight:700}
+.hist .h button{background:0;border:0;color:#94a3b8;font-size:12px;display:flex;gap:4px;align-items:center}
+.hist .e{padding:32px;text-align:center;font-size:14px;color:#94a3b8}
+.it{display:flex;gap:16px;justify-content:space-between;padding:16px 20px;border-top:1px solid #ffffff0d}
+.it:first-of-type{border-top:0}
+.it .grow div{font-size:12px;color:var(--mu)}
+.it .ti{font-size:14px;color:#cbd5e1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin:6px 0 2px}
+.it .ac{display:flex;gap:4px;align-items:center}
+.it .ac button{display:flex;align-items:center;gap:4px;background:0;border:1px solid transparent;color:#94a3b8;border-radius:8px;padding:6px 8px;font-size:12px}
+.it .ac .re{color:#67e8f9;background:rgba(6,182,212,.1);border-color:rgba(6,182,212,.2)}
+footer{margin-top:80px;border-top:1px solid #ffffff0d;padding:32px 0 48px;text-align:center;font-size:12px;line-height:1.8;color:var(--mu)}
+footer p{max-width:440px;margin:12px auto 0}
+@media(max-width:600px){.opts{grid-template-columns:1fr}.grid{grid-template-columns:repeat(2,1fr)}.go{width:100%}.hide{display:none}.hero{padding-top:44px}}
+</style>
+</head>
+<body>
+<div class="bg"><i></i><i></i><i></i></div>
+<header><div class="wrap">
+  <div class="brand">
+    <svg width="36" height="36" viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="g" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse"><stop stop-color="#22d3ee"/><stop offset=".55" stop-color="#0ea5e9"/><stop offset="1" stop-color="#2563eb"/></linearGradient></defs><rect width="48" height="48" rx="13" fill="url(#g)"/><path d="M12 36V18.5a3.5 3.5 0 0 1 7 0V36M12 27h7M23 36V20a3 3 0 0 1 6 0v16M23 26h6M33 36V15.5a3.5 3.5 0 0 1 7 0V36" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <div><b>AMR<span> Downloader</span></b><small>تحميل بدون علامة مائية</small></div>
+  </div>
+  <div class="pill hide"><svg class="i" style="color:#34d399" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>بدون تسجيل • بدون إعلانات</div>
+</div></header>
+
+<main class="wrap">
+  <section class="hero">
+    <span class="tag">✦ تحميل فوري بدقة تصل إلى 4K</span>
+    <h1>حمّل فيديوهاتك المفضلة<br><span>بدون علامة مائية</span></h1>
+    <p>انسخ الرابط من انستجرام أو تيك توك أو فيسبوك أو إكس، والصقه هنا — نحمّله لك مباشرة بأعلى جودة.</p>
+  </section>
+
+  <form class="box" id="f" autocomplete="off">
+    <div class="line">
+      <div class="inp">
+        <input id="url" type="text" inputmode="url" spellcheck="false" autocapitalize="none" placeholder="الصق رابط الفيديو هنا…">
+        <button type="button" class="paste" id="paste"><svg class="i" viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2M9 2h6v4H9z"/></svg>لصق</button>
+      </div>
+      <button class="go" id="go" type="submit"><svg class="i" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg><span>تحميل الآن</span></button>
+    </div>
+    <div id="info"></div>
+    <div class="opts">
+      <div><label>نوع التحميل</label>
+        <div class="modes" id="modes">
+          <button type="button" data-m="auto" class="on"><svg class="i" viewBox="0 0 24 24"><path d="M23 7l-7 5 7 5V7zM1 5h15v14H1z"/></svg>فيديو</button>
+          <button type="button" data-m="audio"><svg class="i" viewBox="0 0 24 24"><path d="M9 18V5l12-2v13M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM21 16a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/></svg>صوت فقط</button>
+          <button type="button" data-m="mute"><svg class="i" viewBox="0 0 24 24"><path d="M11 5L6 9H2v6h4l5 4V5zM23 9l-6 6M17 9l6 6"/></svg>بدون صوت</button>
+        </div>
+      </div>
+      <div><label for="q">جودة الفيديو</label>
+        <select id="q"><option value="max">أعلى جودة</option><option value="2160">4K</option><option value="1440">2K</option><option value="1080">1080p</option><option value="720">720p</option><option value="480">480p</option><option value="360">360p</option></select>
+      </div>
+    </div>
+  </form>
+
+  <div id="out"></div>
+
+  <section style="margin-top:64px"><h2>منصات مدعومة</h2>
+    <div class="plat"><div>انستجرام</div><div>تيك توك</div><div>فيسبوك</div><div>إكس / تويتر</div><div>يوتيوب</div><div>وأكثر</div></div>
+  </section>
+
+  <section style="margin-top:64px"><div class="hist" id="hist"></div></section>
+
+  <footer>
+    <b style="color:#fff;font-size:14px">AMR<span style="color:var(--cy)"> Downloader</span></b>
+    <p>أداة لتحميل المحتوى العام لأغراض شخصية. يتحمل المستخدم مسؤولية الالتزام بحقوق الملكية الفكرية وشروط استخدام كل منصة.</p>
+  </footer>
+</main>
+
+<script>
+/* ===== الإعدادات: ضع هنا بيانات مشروع Supabase الذي نشرت عليه دالة download ===== */
+const SUPABASE_URL = 'https://YOUR-PROJECT.supabase.co';
+const SUPABASE_ANON_KEY = 'YOUR_ANON_KEY';
+/* ============================================================================== */
+
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const safe = (u) => typeof u === 'string' && /^https?:\/\//i.test(u);
+const LBL = { instagram: 'انستجرام', tiktok: 'تيك توك', facebook: 'فيسبوك', twitter: 'إكس / تويتر', youtube: 'يوتيوب', other: 'رابط' };
+const badge = (p) => `<span class="b b-${LBL[p] ? p : 'other'}">${LBL[p] || LBL.other}</span>`;
+const ic = (d) => `<svg class="i" viewBox="0 0 24 24"><path d="${d}"/></svg>`;
+const I = {
+  dl: 'M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3',
+  re: 'M21 12a9 9 0 1 1-3-6.7L21 8M21 3v5h-5',
+  tr: 'M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6',
+  ok: 'M20 6L9 17l-5-5',
+  al: 'M12 9v4m0 4h.01M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z',
+  hi: 'M3 3v5h5M3.05 13A9 9 0 1 0 6 5.3L3 8M12 7v5l4 2',
+  au: 'M9 18V5l12-2v13M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM21 16a3 3 0 1 1-6 0 3 3 0 0 1 6 0z',
+};
+
+const ERR = {
+  'error.api.rate_exceeded': 'عدد الطلبات كبير الآن. انتظر قليلًا ثم حاول مجددًا.',
+  'error.api.capacity': 'الخادم مشغول حاليًا. حاول بعد لحظات.',
+  'error.api.timed_out': 'استغرقت المعالجة وقتًا طويلًا. حاول مرة أخرى.',
+  'error.api.link.invalid': 'الرابط غير صالح. انسخه كاملًا من التطبيق وحاول مجددًا.',
+  'error.api.link.unsupported': 'هذا الرابط غير مدعوم.',
+  'error.api.content.video.unavailable': 'الفيديو غير متاح أو تم حذفه.',
+  'error.api.content.video.live': 'لا يمكن تحميل البث المباشر.',
+  'error.api.content.video.age': 'الفيديو مقيّد بالعمر ولا يمكن تحميله.',
+  'error.api.content.video.region': 'الفيديو غير متاح في هذه المنطقة.',
+  'error.api.content.video.private': 'الفيديو خاص ولا يمكن الوصول إليه.',
+  'error.api.content.post.unavailable': 'المنشور غير متاح أو تم حذفه.',
+  'error.api.content.post.private': 'المنشور خاص (حساب خاص) ولا يمكن تحميله.',
+  'error.api.fetch.empty': 'لم نجد وسائط قابلة للتحميل في هذا الرابط.',
+  'error.api.youtube.login': 'هذا الفيديو يتطلب تسجيل دخول.',
+  config_missing: 'الموقع غير مهيّأ: عدّل SUPABASE_URL و SUPABASE_ANON_KEY داخل الملف.',
+  network: 'تعذّر الاتصال بالخادم. تحقق من الإنترنت وحاول مرة أخرى.',
+};
+const FINAL = new Set(['error.api.link.invalid', 'error.api.link.unsupported', 'error.api.content.video.unavailable', 'error.api.content.video.live', 'error.api.content.video.age', 'error.api.content.video.private', 'error.api.content.post.unavailable', 'error.api.content.post.private', 'error.api.fetch.empty', 'config_missing']);
+const friendly = (c) => ERR[c] || (c.startsWith('error.api.content.') ? 'المحتوى غير متاح للتحميل.' : 'تعذّر تحميل هذا الرابط الآن. حاول مرة أخرى بعد لحظات.');
+
+function extractUrl(t) {
+  const m = t.match(/(?:https?:\/\/|www\.)[^\s"'<>،؛]+/i);
+  if (!m) return null;
+  let u = m[0].replace(/[).,;:!?\]}»]+$/, '');
+  if (/^www\./i.test(u)) u = 'https://' + u;
+  try { const p = new URL(u); return /^https?:$/.test(p.protocol) ? p.toString() : null; } catch { return null; }
+}
+function platform(u) {
+  let h = '';
+  try { h = new URL(u).hostname.toLowerCase(); } catch { return 'other'; }
+  const is = (...d) => d.some((x) => h === x || h.endsWith('.' + x));
+  if (is('youtube.com', 'youtu.be')) return 'youtube';
+  if (is('tiktok.com')) return 'tiktok';
+  if (is('instagram.com', 'instagr.am')) return 'instagram';
+  if (is('facebook.com', 'fb.watch', 'fb.com')) return 'facebook';
+  if (is('twitter.com', 'x.com', 't.co')) return 'twitter';
+  return 'other';
+}
+
+/* ---------- الاتصال بالخادم ---------- */
+async function callOnce(body) {
+  const ctl = new AbortController(), timer = setTimeout(() => ctl.abort(), 60000);
+  try {
+    const r = await fetch(SUPABASE_URL.replace(/\/+$/, '') + '/functions/v1/download', {
+      method: 'POST',
+      headers: { Authorization: 'Bearer ' + SUPABASE_ANON_KEY, apikey: SUPABASE_ANON_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify(body), signal: ctl.signal,
+    });
+    let d = {};
+    try { d = await r.json(); } catch {}
+    if (d.kind === 'single' && safe(d.url)) return { kind: 'single', url: d.url, filename: d.filename || 'amr_video.mp4', at: Date.now() };
+    if (d.kind === 'picker' && Array.isArray(d.items)) {
+      const items = d.items.filter((i) => i && safe(i.url));
+      if (items.length) return { kind: 'picker', items, audio: safe(d.audio) ? d.audio : '', audioFilename: d.audioFilename, at: Date.now() };
+    }
+    if (r.status === 429) return { kind: 'error', code: 'error.api.rate_exceeded' };
+    return { kind: 'error', code: d.code || d.error || 'error.api.generic' };
+  } catch (e) {
+    return { kind: 'error', code: e.name === 'AbortError' ? 'error.api.timed_out' : 'network' };
+  } finally { clearTimeout(timer); }
+}
+async function request(body) {
+  if (!/^https?:\/\//.test(SUPABASE_URL) || SUPABASE_URL.includes('YOUR-PROJECT') || !SUPABASE_ANON_KEY || SUPABASE_ANON_KEY === 'YOUR_ANON_KEY') return { kind: 'error', code: 'config_missing' };
+  let res = await callOnce(body);
+  if (res.kind === 'error' && !FINAL.has(res.code) && res.code !== 'error.api.rate_exceeded') {
+    await new Promise((r) => setTimeout(r, 1200));
+    res = await callOnce(body);
+  }
+  return res;
+}
+
+/* ---------- السجل (محفوظ في جهاز المستخدم فقط) ---------- */
+const HK = 'amr_history_v1';
+const getH = () => { try { const a = JSON.parse(localStorage.getItem(HK) || '[]'); return Array.isArray(a) ? a : []; } catch { return []; } };
+const setH = (a) => { try { localStorage.setItem(HK, JSON.stringify(a.slice(0, 30))); } catch {} renderHist(); };
+const addH = (e) => setH([{ ...e, id: Date.now() + '-' + Math.random().toString(36).slice(2, 6), at: Date.now() }, ...getH()]);
+function renderHist() {
+  const a = getH(), el = $('#hist');
+  if (!a.length) { el.innerHTML = `<div class="e">${ic(I.hi)}<br><br>لا توجد عمليات تحميل بعد. الصق رابطًا بالأعلى للبدء.</div>`; return; }
+  el.innerHTML = `<div class="h"><span>${ic(I.hi)} سجل التحميلات (${a.length})</span><button data-a="clear">${ic(I.tr)} مسح الكل</button></div>` + a.map((x) => `
+    <div class="it"><div class="grow">
+      ${badge(x.platform)} ${x.status === 'success' ? `<span style="color:#6ee7b7;font-size:12px">${ic(I.ok)} تم${x.quality ? ' • ' + (x.quality === 'max' ? 'أعلى جودة' : esc(x.quality) + 'p') : ''}</span>` : `<span style="color:#fda4af;font-size:12px">فشل</span>`}
+      <div class="ti" dir="auto">${esc(x.title || x.url)}</div>
+      <div style="direction:ltr;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(x.url)}</div>
+      <div style="margin-top:4px;font-size:11px;color:#475569">${new Date(x.at).toLocaleString('ar-EG', { dateStyle: 'medium', timeStyle: 'short' })}</div>
+    </div><div class="ac"><button class="re" data-a="reuse" data-u="${esc(x.url)}">${ic(I.re)} إعادة</button><button data-a="del" data-id="${esc(x.id)}" aria-label="حذف">${ic(I.tr)}</button></div></div>`).join('');
+}
+
+/* ---------- الواجهة ---------- */
+let mode = 'auto', busy = false, items = [], expTimer = 0, cur = '';
+const out = $('#out'), urlIn = $('#url'), info = $('#info');
+
+function setInfo() {
+  const u = extractUrl(urlIn.value);
+  info.innerHTML = u ? badge(platform(u)) : '';
+}
+function showErr(msg) { info.insertAdjacentHTML('beforeend', `<span class="err">${esc(msg)}</span>`); }
+
+function showSingle(res, src) {
+  clearTimeout(expTimer);
+  out.innerHTML = `<div class="card ok"><div class="row"><div class="grow"><b style="color:#a7f3d0">الملف جاهز للتحميل</b> ${badge(platform(src))}
+    <div class="t" dir="auto">${esc(res.filename)}</div><div class="u">${esc(src)}</div></div>
+    <span id="act"><a class="dl" href="${esc(res.url)}" target="_blank" rel="noopener noreferrer" download="${esc(res.filename)}">${ic(I.dl)} تحميل</a></span></div>
+    <p class="hint" id="hint">إن لم يبدأ التحميل فاضغط مطولًا على الزر واختر «حفظ الرابط/تنزيل». الرابط صالح لدقائق قليلة.</p></div>${again()}`;
+  expTimer = setTimeout(() => {
+    const a = $('#act'); if (!a) return;
+    a.innerHTML = `<button class="dl warn" data-a="refresh">${ic(I.re)} تحديث الرابط</button>`;
+    $('#hint').textContent = 'انتهت صلاحية الرابط المؤقت. اضغط «تحديث الرابط» للحصول على رابط جديد.';
+  }, 75000);
+}
+function showPicker(res, src) {
+  clearTimeout(expTimer);
+  items = res.items;
+  out.innerHTML = `<div class="card"><div class="row" style="justify-content:space-between;align-items:center"><div><b>المنشور يحتوي عدة عناصر — اختر ما تريد</b> ${badge(platform(src))}</div>
+    ${res.audio ? `<a class="sm" style="color:#fcd34d;text-decoration:none" href="${esc(res.audio)}" target="_blank" rel="noopener noreferrer" download="${esc(res.audioFilename || 'amr_audio.mp3')}">${ic(I.au)} تحميل الصوت</a>` : ''}</div>
+    <div class="grid">${items.map((it, i) => `<button type="button" class="pk" data-a="pick" data-i="${i}">${safe(it.thumb) ? `<img src="${esc(it.thumb)}" alt="" referrerpolicy="no-referrer" loading="lazy">` : ''}<span>${it.type === 'photo' ? 'صورة' : 'فيديو'}</span></button>`).join('')}</div></div>${again()}`;
+}
+function showError(code) {
+  clearTimeout(expTimer);
+  out.innerHTML = `<div class="card bad"><div class="row"><span style="color:#fda4af">${ic(I.al)}</span><div class="grow"><b style="color:#fecdd3">تعذّر إكمال التحميل</b>
+    <div style="font-size:14px;color:#fecdd3b3;margin-top:4px">${esc(friendly(code))}</div><div style="font-size:11px;color:#fda4af66;direction:ltr;text-align:right;margin-top:8px">${esc(code)}</div>
+    ${FINAL.has(code) ? '' : `<button class="sm" style="margin-top:12px;color:#ffe4e6" data-a="refresh">${ic(I.re)} إعادة المحاولة</button>`}</div></div></div>${again()}`;
+}
+const again = () => `<div class="more"><button data-a="reset">تحميل رابط آخر ←</button></div>`;
+
+async function submit() {
+  if (busy) return;
+  const src = extractUrl(urlIn.value);
+  info.innerHTML = '';
+  if (!src) { showErr(urlIn.value.trim() ? 'الرابط غير صالح. انسخ رابط الفيديو كاملًا (يبدأ بـ https).' : 'الصق رابط الفيديو أولًا.'); return; }
+  busy = true; cur = src; urlIn.value = src; setInfo();
+  $('#go').disabled = true; $('#go span').textContent = 'جارٍ التحضير…';
+  clearTimeout(expTimer);
+  out.innerHTML = `<div class="card"><div class="row" style="align-items:center"><span class="spin"></span><div><b>جارٍ تحضير التحميل بأعلى جودة…</b><small>قد يستغرق حتى نصف دقيقة. لا تغلق الصفحة.</small></div></div><div class="bar"><i></i></div></div>`;
+  const q = $('#q').value;
+  const res = await request({ url: src, videoQuality: q, downloadMode: mode });
+  busy = false; $('#go').disabled = false; $('#go span').textContent = 'تحميل الآن';
+  const p = platform(src);
+  if (res.kind === 'error') { showError(res.code); addH({ url: src, platform: p, title: '', quality: q, status: 'error' }); }
+  else {
+    res.kind === 'single' ? showSingle(res, src) : showPicker(res, src);
+    addH({ url: src, platform: p, title: res.kind === 'single' ? res.filename : 'منشور متعدد العناصر', quality: q, status: 'success' });
+  }
+}
+
+$('#f').addEventListener('submit', (e) => { e.preventDefault(); submit(); });
+urlIn.addEventListener('input', setInfo);
+$('#paste').addEventListener('click', async () => {
+  try { const t = await navigator.clipboard.readText(); if (t) { urlIn.value = t.trim(); setInfo(); } }
+  catch { info.innerHTML = ''; showErr('المتصفح منع الوصول للحافظة. الصق الرابط يدويًا في الحقل.'); }
+});
+$('#modes').addEventListener('click', (e) => {
+  const b = e.target.closest('button'); if (!b) return;
+  mode = b.dataset.m;
+  document.querySelectorAll('#modes button').forEach((x) => x.classList.toggle('on', x === b));
+});
+out.addEventListener('click', (e) => {
+  const b = e.target.closest('[data-a]'); if (!b) return;
+  const a = b.dataset.a;
+  if (a === 'refresh') { urlIn.value = cur; submit(); }
+  else if (a === 'reset') { clearTimeout(expTimer); out.innerHTML = ''; urlIn.value = ''; info.innerHTML = ''; }
+  else if (a === 'pick') {
+    const it = items[+b.dataset.i]; if (!it) return;
+    showSingle({ url: it.url, filename: `amr_${it.type}_${Date.now()}.${it.type === 'photo' ? 'jpg' : 'mp4'}`, at: Date.now() }, cur);
+  }
+});
+$('#hist').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-a]'); if (!b) return;
+  const a = b.dataset.a;
+  if (a === 'clear') setH([]);
+  else if (a === 'del') setH(getH().filter((x) => x.id !== b.dataset.id));
+  else if (a === 'reuse') { urlIn.value = b.dataset.u; out.innerHTML = ''; setInfo(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+});
+renderHist();
+</script>
+</body>
+</html>
